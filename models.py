@@ -20,9 +20,9 @@ class LogHelper:
 
 
 class BaseLog(Document):
-    project = StringField(max_length=50, default='itembank')
-    app = StringField(max_length=50, default='global')
-    func = StringField(max_length=50)
+    project = StringField(max_length=50, default='project')
+    app = StringField(max_length=50, default='app')
+    func = StringField(max_length=50, default='func')
     meta = {
         'abstract': True,
         'indexes': ['project', 'app', 'func']
@@ -44,27 +44,24 @@ class LogRecord(BaseLog):
         ]
     }
 
-    @classmethod
-    def write(cls, text: str, level: str, user: Optional[int] = 0, app: Optional[str] = ''):
+    def write(self, log: str, level: str, user: Optional[int] = 0):
         func_name = [i.function for i in inspect.stack()][2]
-        record = cls(log=text, level=level, user=user, app=app, func=func_name)
+        record = self.__class__(
+            log=log, user=user, level=level, func=func_name,
+            project=self.project, app=self.app)
         record.save()
 
-    @classmethod
-    def info(cls, text: str, user: int = 0, app: str = ''):
-        cls.write(text=text, user=user, app=app, level="INFO")
+    def debug(self, text: str, user: int = 0):
+        self.write(log=text, level="DEBUG", user=user)
 
-    @classmethod
-    def debug(cls, text: str, user: int = 0, app: str = ''):
-        cls.write(text=text, user=user, app=app, level="DEBUG")
+    def info(self, text: str, user: int = 0):
+        self.write(log=text, level="INFO", user=user)
 
-    @classmethod
-    def warning(cls, text: str, user: int = 0, app: str = ''):
-        cls.write(text=text, user=user, app=app, level="WARNING")
+    def warning(self, text: str, user: int = 0):
+        self.write(log=text, level="WARNING", user=user)
 
-    @classmethod
-    def error(cls, text: str, user: int = 0, app: str = ''):
-        cls.write(text=text, user=user, app=app, level="ERROR")
+    def error(self, text: str, user: int = 0):
+        self.write(log=text, level="ERROR", user=user)
 
 
 class LogAccess(BaseLog):

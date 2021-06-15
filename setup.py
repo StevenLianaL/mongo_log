@@ -5,7 +5,7 @@ with open("README.md", "r", encoding='utf8') as fh:
 
 setuptools.setup(
     name="mongo_log",
-    version="0.0.1",
+    version="0.0.2",
     author="Steven Wang",
     author_email="brightstar8284@icloud.com",
     description="use mongo db to log",
