@@ -16,7 +16,7 @@ class LogLevel(Enum):
 class LogHelper:
     @classmethod
     def current_month(cls):
-        return f"{datetime.utcnow():%Y-%M}"
+        return f"{datetime.utcnow():%Y-%m}"
 
 
 class BaseLog(Document):
